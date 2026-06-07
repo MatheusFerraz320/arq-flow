@@ -9,7 +9,7 @@ export const AUTH_CONFIG = {
     return {
       httpOnly: true,
       sameSite: 'none',
-      secure: false,
+      secure: true,
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     };
