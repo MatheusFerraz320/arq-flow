@@ -3,6 +3,13 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
 
+export interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -27,8 +34,10 @@ export class AuthService {
       role: user.role,
     };
 
+    const accessToken = this.jwtService.sign(payload);
+
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken,
       user: {
         id: user.id,
         name: user.name,
@@ -36,5 +45,23 @@ export class AuthService {
         role: user.role,
       },
     };
+  }
+
+  async validateUser(token: string): Promise<AuthUser> {
+    try {
+      const payload = this.jwtService.verify(token);
+      const user = await this.usersService.findById(payload.sub);
+      if (!user) {
+        throw new UnauthorizedException('Usuário não encontrado');
+      }
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      };
+    } catch {
+      throw new UnauthorizedException('Token inválido ou expirado');
+    }
   }
 }

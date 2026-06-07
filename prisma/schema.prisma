@@ -7,6 +7,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(ARCHITECT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  clients   Client[]
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  userId    String
+  name      String
+  email     String
+  phone     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
+  projects  Project[]
+
+  @@map("clients")
+}
+
+model Project {
+  id          String          @id @default(cuid())
+  clientId    String
+  title       String
+  description String?
+  status      ProjectStatus   @default(BRIEFING)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  updates     ProjectUpdate[]
+  client      Client          @relation(fields: [clientId], references: [id])
+
+  @@map("projects")
+}
+
+model ProjectUpdate {
+  id        String   @id @default(cuid())
+  projectId String
+  message   String
+  createdAt DateTime @default(now())
+  project   Project  @relation(fields: [projectId], references: [id])
+
+  @@map("project_updates")
+}
+
 enum Role {
   ARCHITECT
   CLIENT
@@ -17,53 +66,4 @@ enum ProjectStatus {
   PROJETO
   REVISAO
   CONCLUIDO
-}
-
-model User {
-  id       String   @id @default(cuid())
-  name     String
-  email    String   @unique
-  password String
-  role     Role     @default(ARCHITECT)
-  clients  Client[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Client {
-  id        String    @id @default(cuid())
-  userId    String
-  user      User      @relation(fields: [userId], references: [id])
-  name      String
-  email     String
-  phone     String?
-  projects  Project[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-
-  @@map("clients")
-}
-
-model Project {
-  id          String          @id @default(cuid())
-  clientId    String
-  client      Client          @relation(fields: [clientId], references: [id])
-  title       String
-  description String?
-  status      ProjectStatus   @default(BRIEFING)
-  updates     ProjectUpdate[]
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
-
-  @@map("projects")
-}
-
-model ProjectUpdate {
-  id        String   @id @default(cuid())
-  projectId String
-  project   Project  @relation(fields: [projectId], references: [id])
-  message   String
-  createdAt DateTime @default(now())
-
-  @@map("project_updates")
 }

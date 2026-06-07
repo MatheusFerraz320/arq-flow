@@ -5,14 +5,15 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { AUTH_CONFIG } from './auth.config';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'arqflow-dev-secret-change-in-production',
-      signOptions: { expiresIn: '7d' },
+      secret: AUTH_CONFIG.jwtSecret,
+      signOptions: { expiresIn: AUTH_CONFIG.tokenExpiresIn },
     }),
   ],
   controllers: [AuthController],
