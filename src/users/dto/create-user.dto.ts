@@ -1,8 +1,11 @@
-import { IsEmail, IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString, MinLength , IsNotEmpty } from 'class-validator';
 import { Role } from '@prisma/client';
+import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
   @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   name: string;
 
   @IsEmail()

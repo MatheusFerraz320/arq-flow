@@ -1,9 +1,11 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsString, IsOptional , isNotEmpty } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
   clientId: string;
 
+  @IsNotEmpty()
+  @Transform(({ value }) => value.trim())
   @IsString()
   title: string;
 
