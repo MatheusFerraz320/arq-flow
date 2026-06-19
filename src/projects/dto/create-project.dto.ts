@@ -1,4 +1,5 @@
-import { IsString, IsOptional , isNotEmpty } from 'class-validator';
+import { IsString, IsOptional , IsNotEmpty } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateProjectDto {
   @IsString()

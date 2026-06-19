@@ -9,7 +9,7 @@ import { Response } from 'express';
 import { AUTH_CONFIG } from './auth.config';
 
 @Injectable()
-export class AuthCookieInterceptor implements NestInterceptor {
+export class AuthCookieInterceptor implements NestInterceptor {  // executa antes do controller
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const response: Response = context.switchToHttp().getResponse();
 
