@@ -19,6 +19,9 @@ export class ProjectsService {
     return this.prisma.project.create({
       data: {
         clientId: createProjectDto.clientId,
+        budget: createProjectDto.budget,
+        startDate: createProjectDto.startDate,
+        dueDate: createProjectDto.dueDate,
         title: createProjectDto.title,
         description: createProjectDto.description,
       },

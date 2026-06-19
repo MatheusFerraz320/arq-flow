@@ -1,4 +1,4 @@
-import { IsString, IsOptional , IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional , IsNotEmpty , IsNumber} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateProjectDto {
@@ -14,4 +14,17 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsOptional()
+  @IsNumber()
+  budget?: number;
+
+  @IsOptional()
+  @IsString()
+  startDate?: string;
+
+  @IsOptional()
+  @IsString()
+  dueDate?: string;
+  
 }
