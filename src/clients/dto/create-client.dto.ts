@@ -5,8 +5,9 @@ export class CreateClientDto {
   @IsNotEmpty()
   name: string;
 
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsOptional()
   @IsString()
