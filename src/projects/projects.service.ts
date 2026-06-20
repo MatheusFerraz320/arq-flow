@@ -27,6 +27,9 @@ export class ProjectsService {
       },
       include: {
         client: true,
+        photos: {
+          orderBy: { order: 'asc' },
+        },
       },
     });
   }
@@ -39,6 +42,9 @@ export class ProjectsService {
         },
         include: {
           client: true,
+          photos: {
+            orderBy: { order: 'asc' },
+          },
           updates: {
             orderBy: { createdAt: 'desc' },
             take: 1,
@@ -56,6 +62,9 @@ export class ProjectsService {
       },
       include: {
         client: true,
+        photos: {
+          orderBy: { order: 'asc' },
+        },
         updates: {
           orderBy: { createdAt: 'desc' },
           take: 1,
@@ -70,6 +79,9 @@ export class ProjectsService {
       where: { id },
       include: {
         client: true,
+        photos: {
+          orderBy: { order: 'asc' },
+        },
         updates: {
           orderBy: { createdAt: 'desc' },
         },
@@ -94,6 +106,9 @@ export class ProjectsService {
       data: { status: updateProjectDto.status },
       include: {
         client: true,
+        photos: {
+          orderBy: { order: 'asc' },
+        },
       },
     });
   }

@@ -51,6 +51,7 @@ model Project {
 
   client         Client          @relation(fields: [clientId], references: [id])
   updates        ProjectUpdate[]
+  photos         ProjectPhoto[]
 
   @@map("projects")
 }
@@ -63,6 +64,19 @@ model ProjectUpdate {
   project   Project  @relation(fields: [projectId], references: [id])
 
   @@map("project_updates")
+}
+
+model ProjectPhoto {
+  id        String   @id @default(cuid())
+  projectId String
+  url       String
+  caption   String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_photos")
 }
 
 enum Role {
