@@ -101,9 +101,15 @@ export class ProjectsService {
       throw new NotFoundException('Projeto não encontrado');
     }
 
+    const data: Record<string, unknown> = {};
+    if (updateProjectDto.status !== undefined) data.status = updateProjectDto.status;
+    if (updateProjectDto.budget !== undefined) data.budget = updateProjectDto.budget;
+    if (updateProjectDto.startDate !== undefined) data.startDate = updateProjectDto.startDate;
+    if (updateProjectDto.dueDate !== undefined) data.dueDate = updateProjectDto.dueDate;
+
     return this.prisma.project.update({
       where: { id },
-      data: { status: updateProjectDto.status },
+      data,
       include: {
         client: true,
         photos: {

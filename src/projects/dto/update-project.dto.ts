@@ -1,11 +1,22 @@
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ProjectStatus } from '@prisma/client';
 
 export class UpdateProjectDto {
-  // So pode ser um dos valores dentro do conjunto PRojectStatus
-  //PostgreSQL Puro seria direto no banco com o CREATE TYPE "ProjectStatus" AS ENUM ('BRIEFING', 'PROJETO', 'REVISAO', 'CONCLUIDO'); 
+  @IsOptional()
   @IsEnum(ProjectStatus)
-  status: ProjectStatus;
+  status?: ProjectStatus;
+
+  @IsOptional()
+  @IsNumber()
+  budget?: number;
+
+  @IsOptional()
+  @IsString()
+  startDate?: string;
+
+  @IsOptional()
+  @IsString()
+  dueDate?: string;
 }
 
 
