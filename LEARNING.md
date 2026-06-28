@@ -388,6 +388,28 @@ Frontend → POST /clients (Authorization: Bearer <token>, Body: { name, email, 
 | **`findUnique`** | SELECT por chave única (ex: findById). |
 | **`include`** | Faz JOIN com tabelas relacionadas. |
 
+## Conceitos aprendidos
+
+### Comportamento de erro do Prisma
+
+| Método | Se não achar | Lança exceção? | Precisa de try/catch? |
+|---|---|---|---|
+| `findMany` | Retorna `[]` | ❌ Não | ❌ Não |
+| `findFirst` / `findUnique` | Retorna `null` | ❌ Não | ❌ Não |
+| `update` | — | ✅ `P2025` | ✅ Sim → `NotFoundException` (404) |
+| `delete` | — | ✅ `P2025` | ✅ Sim → `NotFoundException` (404) |
+| `create` (unique duplicado) | — | ✅ `P2002` | ✅ Sim → `ConflictException` (409) |
+
+**Por que essa diferença?**
+
+Os métodos de leitura (`findMany`, `findFirst`) foram desenhados para ser **tolerantes à ausência** — retornam vazio ou `null` em vez de quebrar. Se der erro neles, é algo grave (banco caiu, conexão perdida), e aí o **500 é o comportamento correto**.
+
+Já no `update`/`delete`, o Prisma lança `P2025` não porque o servidor quebrou, mas porque a operação é **logicamente inválida** — você pediu para modificar ou remover algo que não existe. Isso não é um erro interno de servidor, é um erro de **negócio**, e deve ser traduzido para um HTTP `404 Not Found` (ou `409 Conflict` no caso de unique constraint).
+
+**Resumo:** try/catch em `update`/`delete`/`create` serve para **traduzir exceções do Prisma em HTTP exceptions adequadas**. Em `findMany`/`findFirst` não faz sentido porque não há exceção para traduzir.
+
+> ⚠️ Isso é específico do Prisma. Outros ORMs (TypeORM, Mongoose, Drizzle) têm comportamentos diferentes — cada ferramenta tem sua própria API de erros.
+
 ### Autenticação
 
 | Termo | Explicação |
