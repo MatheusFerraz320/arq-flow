@@ -35,7 +35,6 @@ export class ProjectsService {
   }
 
   async findAll(userId: string, role: string) {
-    if (role === 'ARCHITECT') {
       return this.prisma.project.findMany({
         where: {
           client: { userId },
@@ -53,26 +52,6 @@ export class ProjectsService {
         orderBy: { updatedAt: 'desc' },
       });
     }
-
-    return this.prisma.project.findMany({
-      where: {
-        client: {
-          user: { id: userId },
-        },
-      },
-      include: {
-        client: true,
-        photos: {
-          orderBy: { order: 'asc' },
-        },
-        updates: {
-          orderBy: { createdAt: 'desc' },
-          take: 1,
-        },
-      },
-      orderBy: { updatedAt: 'desc' },
-    });
-  }
 
   async findOne(id: string) {
     const project = await this.prisma.project.findUnique({
