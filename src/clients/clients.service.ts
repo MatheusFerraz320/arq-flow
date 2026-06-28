@@ -20,7 +20,7 @@ export class ClientsService {
 
   async update(id: string, userId: string, updateClientDto: UpdateClientDto) {
     return this.prisma.client.update({
-      where: { id , userId },
+      where: { id, userId },
       data: {
         name: updateClientDto.name,
         email: updateClientDto.email,
@@ -39,9 +39,9 @@ export class ClientsService {
     });
   }
 
-  async findOne(userId: string , id: string) {
+  async findOne(id: string, userId: string) {
     return this.prisma.client.findFirst({
-      where: { id , userId },
+      where: { id, userId },
       include: {
         projects: {
           include: {

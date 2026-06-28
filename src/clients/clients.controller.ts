@@ -22,21 +22,19 @@ export class ClientsController {
   @Roles(Role.ARCHITECT)
   update(
     @Param('id') id: string,
+    @Req() req,
     @Body() updateClientDto: UpdateClientDto,
   ) {
-    return this.clientsService.update(id, updateClientDto);
+    return this.clientsService.update(id, req.user.id, updateClientDto);
   }
 
   @Get()
   findAll(@Req() req) {
-    if (req.user.role === Role.ARCHITECT) {
-      return this.clientsService.findAll(req.user.id);
-    }
-    return this.clientsService.findByEmail(req.user.email);
+    return this.clientsService.findAll(req.user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.clientsService.findOne(id);
+  findOne(@Param('id') id: string, @Req() req) {
+    return this.clientsService.findOne(id, req.user.id);
   }
 }
