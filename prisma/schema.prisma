@@ -20,7 +20,7 @@ model User {
 
 model Client {
   id        String    @id @default(cuid())
-  userId    String
+  userId    String    
   name      String
   email     String
   phone     String?
@@ -29,6 +29,7 @@ model Client {
   user      User      @relation(fields: [userId], references: [id])
   projects  Project[]
 
+  @@unique([id, userId]) 
   @@map("clients")
 }
 

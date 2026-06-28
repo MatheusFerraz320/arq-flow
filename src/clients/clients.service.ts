@@ -18,9 +18,9 @@ export class ClientsService {
     });
   }
 
-  async update(id: string, updateClientDto: UpdateClientDto) {
+  async update(id: string, userId: string, updateClientDto: UpdateClientDto) {
     return this.prisma.client.update({
-      where: { id },
+      where: { id , userId },
       data: {
         name: updateClientDto.name,
         email: updateClientDto.email,
@@ -39,9 +39,9 @@ export class ClientsService {
     });
   }
 
-  async findOne(id: string) {
-    return this.prisma.client.findUnique({
-      where: { id },
+  async findOne(userId: string , id: string) {
+    return this.prisma.client.findFirst({
+      where: { id , userId },
       include: {
         projects: {
           include: {
@@ -54,18 +54,4 @@ export class ClientsService {
     });
   }
 
-  async findByEmail(email: string) {
-    return this.prisma.client.findFirst({
-      where: { email },
-      include: {
-        projects: {
-          include: {
-            updates: {
-              orderBy: { createdAt: 'desc' },
-            },
-          },
-        },
-      },
-    });
-  }
 }
