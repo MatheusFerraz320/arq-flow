@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
@@ -19,14 +20,23 @@ export class ClientsService {
   }
 
   async update(id: string, userId: string, updateClientDto: UpdateClientDto) {
-    return this.prisma.client.update({
-      where: { id, userId },
-      data: {
-        name: updateClientDto.name,
-        email: updateClientDto.email,
-        phone: updateClientDto.phone,
-      },
-    });
+    try {
+      return await this.prisma.client.update({
+        where: { id, userId },
+        data: {
+          name: updateClientDto.name,
+          email: updateClientDto.email,
+          phone: updateClientDto.phone,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Client not found');
+        }
+      }
+      throw error;  // sem isso se não cair no if vai retornar bug silencioso
+    }
   }
 
   async findAll(userId: string) {
@@ -54,4 +64,18 @@ export class ClientsService {
     });
   }
 
+  async remove(id: string, userId: string) {
+    try {
+      return await this.prisma.client.delete({
+        where: { id, userId },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Client not found');
+        }
+      }
+      throw error;  // sem isso se não cair no if vai retornar bug silencioso
+    }
+  }
 }
