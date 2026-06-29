@@ -17,6 +17,10 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   dueDate?: string;
+
+  @IsOptional()
+  @IsString()
+  message?: string;
 }
 
 

@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Prisma } from '@prisma/client';
+
 
 @Injectable()
 export class ProjectsService {
@@ -13,7 +15,7 @@ export class ProjectsService {
     });
 
     if (!client) {
-      throw new NotFoundException('Cliente não encontrado');
+      throw new NotFoundException('Cliente não encontrado'); //sem cliente sem projeto
     }
 
     return this.prisma.project.create({
@@ -75,26 +77,41 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto) {
-    const project = await this.prisma.project.findUnique({ where: { id } });
-    if (!project) {
-      throw new NotFoundException('Projeto não encontrado');
-    }
+    try {
+      const { message, ...fields } = updateProjectDto;
 
-    const data: Record<string, unknown> = {};
-    if (updateProjectDto.status !== undefined) data.status = updateProjectDto.status;
-    if (updateProjectDto.budget !== undefined) data.budget = updateProjectDto.budget;
-    if (updateProjectDto.startDate !== undefined) data.startDate = updateProjectDto.startDate;
-    if (updateProjectDto.dueDate !== undefined) data.dueDate = updateProjectDto.dueDate;
+      const data: Record<string, unknown> = {};
+      if (fields.status !== undefined) data.status = fields.status;
+      if (fields.budget !== undefined) data.budget = fields.budget;
+      if (fields.startDate !== undefined) data.startDate = fields.startDate;
+      if (fields.dueDate !== undefined) data.dueDate = fields.dueDate;
 
-    return this.prisma.project.update({
-      where: { id },
-      data,
-      include: {
-        client: true,
-        photos: {
-          orderBy: { order: 'asc' },
+      if (message) {
+        await this.prisma.projectUpdate.create({
+          data: { projectId: id, message },
+        });
+      }
+
+      return this.prisma.project.update({
+        where: { id },
+        data,
+        include: {
+          client: true,
+          photos: {
+            orderBy: { order: 'asc' },
+          },
+          updates: {
+            orderBy: { createdAt: 'desc' },
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if (error.code === 'P2025') {
+            throw new NotFoundException('Projeto nao encontrado');
+          }
+        }
+        throw error;  
+      }
   }
 }
