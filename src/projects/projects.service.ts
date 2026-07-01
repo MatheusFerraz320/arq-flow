@@ -55,9 +55,11 @@ export class ProjectsService {
       });
     }
 
-  async findOne(id: string) {
-    const project = await this.prisma.project.findUnique({
-      where: { id },
+  async findOne(id: string , userId: string) {
+    const project = await this.prisma.project.findFirst({
+      where: { id, 
+      client: {userId}      //base é user se o cliente for do user project vai ser do client
+      },
       include: {
         client: true,
         photos: {
