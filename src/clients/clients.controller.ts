@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch , Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch , Param, UseGuards, Req , Delete } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -36,5 +36,10 @@ export class ClientsController {
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req) {
     return this.clientsService.findOne(id, req.user.id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string, @Req() req) {
+    return this.clientsService.remove(id, req.user.id);
   }
 }

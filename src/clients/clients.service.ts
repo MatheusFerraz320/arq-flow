@@ -32,7 +32,7 @@ export class ClientsService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException('Client not found');
+          throw new NotFoundException('Client não encontrado');
         }
       }
       throw error;  // sem isso se não cair no if vai retornar bug silencioso
@@ -72,7 +72,7 @@ export class ClientsService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
-          throw new NotFoundException('Client not found');
+          throw new NotFoundException('Cliente não encontrado');
         }
       }
       throw error;  // sem isso se não cair no if vai retornar bug silencioso
