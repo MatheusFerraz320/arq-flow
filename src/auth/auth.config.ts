@@ -1,7 +1,13 @@
 import { CookieOptions } from 'express';
 
+
+const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+  throw new Error('JWT_SECRET is not defined');
+}
+
 export const AUTH_CONFIG = {
-  jwtSecret: process.env.JWT_SECRET || 'arqflow-dev-secret-change-in-production',
+  jwtSecret,
   tokenExpiresIn: '7d',
   cookieName: 'arqflow_token',
 
