@@ -1,6 +1,6 @@
 # ArqFlow
 
-## Portal de Aprovação e Acompanhamento de Projetos
+## Ferramenta de gestão para arquitetos
 
 **Versão:** 0.1 (MVP)
 
@@ -8,11 +8,11 @@
 
 # Visão Geral
 
-O ArqFlow é uma plataforma que permite que arquitetos organizem projetos e compartilhem o andamento com seus clientes.
+O ArqFlow é uma plataforma que permite que arquitetos organizem projetos e organizem o andamento deles.
 
 O objetivo é reduzir a dependência de WhatsApp, e-mails e arquivos espalhados em diferentes plataformas.
 
-O cliente possui acesso a um portal onde pode visualizar o status do projeto e acompanhar atualizações realizadas pelo arquiteto.
+A aplicação possui um fluxo de registro de projetos , com etapas e pipeline de atualização.
 
 ---
 
@@ -43,19 +43,19 @@ Perguntas frequentes dos clientes:
 
 # Solução
 
-O ArqFlow centraliza todas as informações do projeto em um único local.
+O ArchitectFlow centraliza todas as informações do projeto em um único local.
 
 Fluxo básico:
 
-Arquiteto → Cria Projeto
+Arquiteto → Registra clientes
+
+↓
+
+Cria projetos vinculados aos clientes
 
 ↓
 
 Atualiza andamento
-
-↓
-
-Cliente acompanha progresso
 
 ---
 
@@ -90,7 +90,9 @@ Cliente acompanha progresso
 ### Projetos
 
 * Criar projeto
-* Editar status
+* Editar status / etapa
+* Log de atualizações
+* Inserção de fotos
 * Listar projetos
 
 ### Atualizações
@@ -105,54 +107,16 @@ Exemplos:
 
 ---
 
-## Funcionalidades do Cliente
-
-### Portal
-
-Visualizar:
-
-* Projetos
-* Status atual
-* Histórico de atualizações
-
----
-
-# Fluxo Principal
-
-### Cadastro
-
-Arquiteto cria cliente
-
-↓
-
-Arquiteto cria projeto
-
-↓
-
-Cliente recebe acesso
-
----
-
-### Atualização
-
-Arquiteto adiciona atualização
-
-↓
-
-Atualização fica disponível no portal
-
-↓
-
-Cliente acompanha andamento
-
----
-
 # Status do Projeto
+
+ENUM
 
 * BRIEFING
 * PROJETO
 * REVISAO
 * CONCLUIDO
+
+ENUM
 
 ---
 
@@ -165,15 +129,6 @@ Pode:
 * Criar clientes
 * Criar projetos
 * Atualizar projetos
-
-## CLIENT
-
-Pode:
-
-* Visualizar seus próprios projetos
-* Visualizar atualizações
-
----
 
 # Estrutura Inicial do Banco
 
@@ -202,6 +157,7 @@ Pode:
 * title
 * description
 * status
+* photo
 
 ---
 

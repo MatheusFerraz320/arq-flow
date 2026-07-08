@@ -1,5 +1,7 @@
 import { IsString, IsOptional , IsNotEmpty , IsNumber} from 'class-validator';
 import { Transform } from 'class-transformer';
+import { ProjectType } from '@prisma/client';
+
 
 export class CreateProjectDto {
   @IsString()             //Required linked on client IsString + IsNotEmpty cover cases
@@ -26,5 +28,8 @@ export class CreateProjectDto {
   @IsOptional()
   @IsString()
   dueDate?: string;
-  
+
+  @IsOptional()
+  @IsEnum(ProjectType)
+  type?: ProjectType;  
 }

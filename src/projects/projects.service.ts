@@ -21,6 +21,7 @@ export class ProjectsService {
     return this.prisma.project.create({
       data: {
         clientId: createProjectDto.clientId,
+        type: createProjectDto.type,
         budget: createProjectDto.budget,
         startDate: createProjectDto.startDate,
         dueDate: createProjectDto.dueDate,
@@ -87,6 +88,7 @@ export class ProjectsService {
       if (fields.budget !== undefined) data.budget = fields.budget;
       if (fields.startDate !== undefined) data.startDate = fields.startDate;
       if (fields.dueDate !== undefined) data.dueDate = fields.dueDate;
+      if (fields.type !== undefined) data.type = fields.type;
 
       if (message) {
         await this.prisma.projectUpdate.create({

@@ -388,6 +388,10 @@ Frontend → POST /clients (Authorization: Bearer <token>, Body: { name, email, 
 | **`findUnique`** | SELECT por chave única (ex: findById). |
 | **`include`** | Faz JOIN com tabelas relacionadas. |
 
+## Como verificar o status das migrations no prisma
+
+npx prisma migrate status , quase que um comando obrigatorio pos um pull , atualizar o repo
+
 ## Conceitos aprendidos
 
 ### Comportamento de erro do Prisma

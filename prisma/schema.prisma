@@ -40,6 +40,8 @@ model Project {
   title         String
   description   String?
 
+  type          ProjectType?     
+
   status        ProjectStatus   @default(BRIEFING)
 
   startDate     DateTime?
@@ -90,4 +92,13 @@ enum ProjectStatus {
   PROJETO
   REVISAO
   CONCLUIDO
+}
+
+enum ProjectType {
+  RESIDENCIAL 
+  COMERCIAL 
+  INTERIORES
+  REFORMA
+  URBANISMO
+  OUTRO
 }
