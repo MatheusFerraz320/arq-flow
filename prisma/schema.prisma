@@ -13,6 +13,7 @@ model User {
   email     String   @unique
   password  String
   role      Role     @default(ARCHITECT)
+  photo     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   clients   Client[]
