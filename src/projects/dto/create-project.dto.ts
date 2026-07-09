@@ -1,4 +1,4 @@
-import { IsString, IsOptional , IsNotEmpty , IsNumber} from 'class-validator';
+import { IsString, IsOptional , IsNotEmpty , IsNumber , IsEnum} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ProjectType } from '@prisma/client';
 
