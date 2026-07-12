@@ -3,6 +3,8 @@ import {
   Post,
   Body,
   Req,
+  Get,
+  Patch,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -55,5 +57,17 @@ export class UsersController {
       throw new BadRequestException('Arquivo não enviado');
     }
     return this.usersService.uploadPhoto((request.user as any).id, file);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  getProfile(@Req() request: Request) {
+    return this.usersService.getProfile((request.user as any).id);
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  updateProfile(@Req() request: Request, @Body() updateData: any) {
+    return this.usersService.updateProfile((request.user as any).id, updateData);
   }
 }

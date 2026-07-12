@@ -1,7 +1,8 @@
-import { Injectable, ConflictException } from '@nestjs/common';
+import { Injectable, ConflictException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Prisma } from '@prisma/client';
 import { unlink } from 'fs/promises';
 import { join } from 'path';
 
@@ -37,6 +38,38 @@ export class UsersService {
   async findById(id: string) {
     return this.prisma.user.findUnique({ where: { id } });
   }
+
+  async getProfile(id: string) {
+    const user = await this.prisma.user.findUnique({  // não lança P2025 
+      where: { id },
+      select: { id: true, name: true, email: true, photo: true, role: true },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    return user;
+  }
+
+  async updateProfile(id: string, updateData: any) {
+    try {
+      const updatedUser = await this.prisma.user.update({
+        where: { id },
+        data: updateData,
+        select: { id: true, name: true, email: true, photo: true, role: true },
+      });
+      return updatedUser;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Usuário não encontrado');
+        }
+      }
+      throw error;  // sem isso se não cair no if vai retornar bug silencioso
+    }
+  }
+  
 
   async uploadPhoto(userId: string, file: Express.Multer.File) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
