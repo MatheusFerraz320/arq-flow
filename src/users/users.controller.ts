@@ -17,17 +17,22 @@ import { randomUUID } from 'crypto';
 import { Request } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+
+// Create a new user
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
+
+// exclusive endpoint for user photo
   @Post('me/photo')
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
@@ -59,15 +64,17 @@ export class UsersController {
     return this.usersService.uploadPhoto((request.user as any).id, file);
   }
 
+// Get the profile of the authenticated user
   @Get('me')
   @UseGuards(JwtAuthGuard)
   getProfile(@Req() request: Request) {
     return this.usersService.getProfile((request.user as any).id);
   }
 
+//update user profile 
   @Patch('me')
   @UseGuards(JwtAuthGuard)
-  updateProfile(@Req() request: Request, @Body() updateData: any) {
-    return this.usersService.updateProfile((request.user as any).id, updateData);
+  updateProfile(@Req() request: Request, @Body() updateUserDto: UpdateUserDto) {
+    return this.usersService.updateProfile((request.user as any).id, updateUserDto);
   }
 }
