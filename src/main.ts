@@ -1,6 +1,3 @@
-import { config } from 'dotenv';
-config();
-
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -11,6 +8,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const FRONTEND_URL = process.env.URL
+
+  app.set('trust proxy', 1);
   app.use(cookieParser());
 
   app.enableCors({
@@ -32,7 +31,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(3001);
-  console.log('ArqFlow running on http://localhost:3001');
+  const port = process.env.PORT || 3001;
+  await app.listen(port);
+  console.log(`ArqFlow running on port ${port}`);
 }
 bootstrap();
