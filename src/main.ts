@@ -6,7 +6,7 @@ import * as cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
-const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL'];
+const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL', 'FRONTEND_URL'];
 
 for (const envVar of requiredEnvVars) {
   if (!process.env[envVar]) {
@@ -16,13 +16,12 @@ for (const envVar of requiredEnvVars) {
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const FRONTEND_URL = process.env.FRONTEND_URL;
 
   app.set('trust proxy', 1);
   app.use(cookieParser());
 
   app.enableCors({
-    origin: FRONTEND_URL ,
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
