@@ -1,14 +1,26 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { CookieOptions } from 'express';
 
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) {
-  throw new Error('JWT_SECRET is not defined');
-}
+@Injectable()
+export class AuthConfig {
+  constructor(private configService: ConfigService) {}
 
-export const AUTH_CONFIG = {
-  jwtSecret,
-  tokenExpiresIn: '7d',
-  cookieName: 'arqflow_token',
+  get jwtSecret(): string {
+    const secret = this.configService.get<string>('JWT_SECRET');
+    if (!secret) {
+      throw new Error('JWT_SECRET não está definido no .env');
+    }
+    return secret;
+  }
+
+  get tokenExpiresIn() {
+    return '7d' as const;
+  }
+
+  get cookieName(): string {
+    return 'arqflow_token';
+  }
 
   get cookieOptions(): CookieOptions {
     return {
@@ -18,5 +30,5 @@ export const AUTH_CONFIG = {
       path: '/',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     };
-  },
-} as const;
+  }
+}

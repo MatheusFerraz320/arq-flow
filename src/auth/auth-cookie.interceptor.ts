@@ -6,10 +6,12 @@ import {
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { Response } from 'express';
-import { AUTH_CONFIG } from './auth.config';
+import { AuthConfig } from './auth.config';
 
 @Injectable()
-export class AuthCookieInterceptor implements NestInterceptor {  // executa antes do controller
+export class AuthCookieInterceptor implements NestInterceptor {
+  constructor(private authConfig: AuthConfig) {}
+
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const response: Response = context.switchToHttp().getResponse();
 
@@ -17,9 +19,9 @@ export class AuthCookieInterceptor implements NestInterceptor {  // executa ante
       map((body) => {
         if (body?.accessToken) {
           response.cookie(
-            AUTH_CONFIG.cookieName,
+            this.authConfig.cookieName,
             body.accessToken,
-            AUTH_CONFIG.cookieOptions,
+            this.authConfig.cookieOptions,
           );
         }
         const { accessToken, ...user } = body;

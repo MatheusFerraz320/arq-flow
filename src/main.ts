@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -5,9 +6,17 @@ import * as cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
+const requiredEnvVars = ['JWT_SECRET', 'DATABASE_URL'];
+
+for (const envVar of requiredEnvVars) {
+  if (!process.env[envVar]) {
+    throw new Error(`Variável de ambiente ${envVar} não definida no .env`);
+  }
+}
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const FRONTEND_URL = process.env.URL;
+  const FRONTEND_URL = process.env.FRONTEND_URL;
 
   app.set('trust proxy', 1);
   app.use(cookieParser());
