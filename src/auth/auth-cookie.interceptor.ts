@@ -24,8 +24,7 @@ export class AuthCookieInterceptor implements NestInterceptor {
             this.authConfig.cookieOptions,
           );
         }
-        const { accessToken, ...user } = body;
-        return user;
+        return body;
       }),
     );
   }
