@@ -50,7 +50,7 @@ export class ClientsService {
   }
 
   async findOne(id: string, userId: string) {
-    return this.prisma.client.findFirst({
+    const client = await this.prisma.client.findFirst({
       where: { id, userId },
       include: {
         projects: {
@@ -62,6 +62,10 @@ export class ClientsService {
         },
       },
     });
+    if (!client) {
+      throw new NotFoundException('Cliente não encontrado');
+    }
+    return client;
   }
 
   async remove(id: string, userId: string) {
