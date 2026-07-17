@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Body,
   Param,
   UseGuards,
@@ -11,6 +12,7 @@ import {
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { CreateUpdateDto } from './dto/create-update.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../common/roles.guard';
 import { Roles } from '../common/roles.decorator';
@@ -29,12 +31,12 @@ export class ProjectsController {
 
   @Get()
   findAll(@Req() req) {
-    return this.projectsService.findAll(req.user.id, req.user.role);
+    return this.projectsService.findAll(req.user.id);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string , @Req() req) {
-    return this.projectsService.findOne(id , req.user.id);
+  findOne(@Param('id') id: string, @Req() req) {
+    return this.projectsService.findOne(id, req.user.id);
   }
 
   @Patch(':id')
@@ -42,7 +44,29 @@ export class ProjectsController {
   update(
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
+    @Req() req,
   ) {
-    return this.projectsService.update(id, updateProjectDto);
+    return this.projectsService.update(id, updateProjectDto, req.user.id);
+  }
+
+  @Post(':projectId/updates')
+  @Roles(Role.ARCHITECT)
+  addUpdate(
+    @Param('projectId') projectId: string,
+    @Body() createUpdateDto: CreateUpdateDto,
+    @Req() req,
+  ) {
+    return this.projectsService.addUpdate(projectId, req.user.id, createUpdateDto);
+  }
+
+  @Get(':projectId/updates')
+  findUpdates(@Param('projectId') projectId: string, @Req() req) {
+    return this.projectsService.findUpdates(projectId, req.user.id);
+  }
+
+  @Delete(':id')
+  @Roles(Role.ARCHITECT)
+  remove(@Param('id') id: string, @Req() req) {
+    return this.projectsService.remove(id, req.user.id);
   }
 }
