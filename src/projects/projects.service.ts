@@ -33,6 +33,9 @@ export class ProjectsService {
         photos: {
           orderBy: { order: 'asc' },
         },
+        payments: {
+          orderBy: { dueDate: 'asc' },
+        },
       },
     });
   }
@@ -50,6 +53,9 @@ export class ProjectsService {
         updates: {
           orderBy: { createdAt: 'desc' },
           take: 1,
+        },
+        payments: {
+          orderBy: { dueDate: 'asc' },
         },
       },
       orderBy: { updatedAt: 'desc' },
@@ -69,6 +75,9 @@ export class ProjectsService {
         },
         updates: {
           orderBy: { createdAt: 'desc' },
+        },
+        payments: {
+          orderBy: { dueDate: 'asc' },
         },
       },
     });
@@ -118,6 +127,9 @@ export class ProjectsService {
         updates: {
           orderBy: { createdAt: 'desc' },
         },
+        payments: {
+          orderBy: { dueDate: 'asc' },
+        },
       },
     });
   }
@@ -160,22 +172,22 @@ export class ProjectsService {
     });
   }
 
-  async remove(id: string, userId: string) {
-    const project = await this.prisma.project.findFirst({
-      where: { id, client: { userId } },
-    });
-    if (!project) {
-      throw new NotFoundException('Projeto não encontrado');
-    }
-    try {
-      return await this.prisma.project.delete({ where: { id } });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Projeto não encontrado');
-        }
-      }
-      throw error;
-    }
+async remove(id: string, userId: string) {
+  const project = await this.prisma.project.findFirst({
+    where: { id, client: { userId } },
+  });
+  if (!project) {
+    throw new NotFoundException('Projeto não encontrado');
   }
+  try {
+    return await this.prisma.project.delete({ where: { id } });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException('Projeto não encontrado');
+      }
+    }
+    throw error;
+  }
+}
 }

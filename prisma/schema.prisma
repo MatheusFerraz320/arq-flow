@@ -56,6 +56,7 @@ model Project {
   client         Client          @relation(fields: [clientId], references: [id])
   updates        ProjectUpdate[]
   photos         ProjectPhoto[]
+  payments       Payment[]
 
   @@map("projects")
 }
@@ -102,4 +103,26 @@ enum ProjectType {
   REFORMA
   URBANISMO
   OUTRO
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  projectId   String
+  description String
+  amount      Decimal
+  dueDate     DateTime
+  paidAt      DateTime?
+  status      PaymentStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  project     Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
 }

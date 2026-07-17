@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { ClientsModule } from './clients/clients.module';
 import { ProjectsModule } from './projects/projects.module';
 import { ProjectPhotosModule } from './project-photos/project-photos.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ProjectPhotosModule } from './project-photos/project-photos.module';
     ClientsModule,
     ProjectsModule,
     ProjectPhotosModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
 })
